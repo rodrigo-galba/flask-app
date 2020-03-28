@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python3 /home/ec2-user/flask=app/app.py
+python3 /home/ec2-user/flask-app/app.py
