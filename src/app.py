@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
-from src.service import ParamService
-from src.user_service import UserService
+from service import ParamService
+from user_service import UserService
+
+import requests
 
 app = Flask(__name__)
 
@@ -12,7 +14,9 @@ def hello():
 
 @app.route("/health")
 def health():
-    return "200"
+    msg = "Current instances\n"
+    response = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4')
+    return response.text
 
 
 @app.route("/list", methods=["GET"])
@@ -40,5 +44,5 @@ def delete():
 
 
 if __name__ == "__main__":        # on running python app.py
-    app.run()                   # run the flask app
-    # app.run(debug=True)           # run the flask app using debugger
+    app.run(host="0.0.0.0")       # run the flask app
+    # app.run(debug=True)         # run the flask app using debugger
