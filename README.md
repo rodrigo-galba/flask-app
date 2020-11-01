@@ -50,6 +50,6 @@ $ aws cloudformation create-stack --stack-name python-cloud9 --template-body fil
 2. Get the URL to access the environment:
 
 ```sh
-$ aws cloudformation describe-stacks --stack-name rogal-cloud9 --query "Stacks[0].Outputs[0].OutputValue"
+$ aws cloudformation describe-stacks --stack-name python-cloud9 --query "Stacks[0].Outputs[0].OutputValue"
 "https://us-east-1.console.aws.amazon.com/cloud9/ide/d96025f784e84b50a59daf55190e4bd1"
 ```
