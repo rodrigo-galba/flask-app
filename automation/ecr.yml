@@ -1,0 +1,11 @@
+Parameters:
+  repositoryName:
+    Type: String
+Resources:
+  MyRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Ref repositoryName
+Outputs:
+  Arn:
+    Value: !GetAtt MyRepository.Arn
