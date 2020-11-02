@@ -63,7 +63,7 @@ docker build . --tag=flask-app:dev
 
 2. Run image locally:
 ```sh
-docker run --rm flask-app:dev
+docker run -p 5000:5000 --rm flask-app:dev
 ```
 
 ## Docker repository with AWS ECR
@@ -75,15 +75,14 @@ aws cloudformation create-stack --stack-name flask-app-docker-repo --template-bo
 
 2. Get url to docker repo:
 ```
-aws cloudformation describe-stacks --stack-name flask-app-docker-repo --query "Stacks[0].Outputs[0].OutputValue"
-"arn:aws:ecr:us-east-1:123456789:repository/flask-app-ecr"
+ECR_URI=$(aws ecr describe-repositories --query "repositories[0].repositoryUri" --repository-name flask-app-ecr --output text)
 ```
 
 ### Push commands
 
 1. Retrieve docker auth token
 ```sh
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 615377834974.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_URI
 ```
 
 2. Build image locally
@@ -93,10 +92,10 @@ docker build -t flask-app-ecr .
 
 3. Tag the image:
 ```sh
-docker tag flask-app-ecr:latest 123456789.dkr.ecr.us-east-1.amazonaws.com/flask-app-ecr:latest
+docker tag flask-app-ecr:latest $ECR_URI:latest
 ```
 
 4. Push the image to the repo:
 ```sh
-docker push 615377834974.dkr.ecr.us-east-1.amazonaws.com/flask-app-ecr:latest
+docker push $ECR_URI:latest
 ```
