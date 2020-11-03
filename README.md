@@ -69,10 +69,9 @@ sudo yum install \
 To access the API on the port 80, it is required to open the C9's security group:
 
 ```sh
-security_group_id=$(aws ec2 describe-instances --query "Reservations[0].Instances[0].SecurityGroups[0].GroupId" --output text)
-aws ec2 describe-security-groups --group-ids $security_group_id
+sg_id=$(aws ec2 describe-security-groups --filter Name=group-name,Values=aws-cloud9-python-cloud9* --query "SecurityGroups[0].GroupId" --output text)
 aws ec2 authorize-security-group-ingress \
-    --group-id $security_group_id \
+    --group-id $sg_id \
     --protocol tcp \
     --port 80 \
     --cidr 0.0.0.0/0
