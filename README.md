@@ -50,8 +50,32 @@ $ aws cloudformation create-stack --stack-name python-cloud9 --template-body fil
 2. Get the URL to access the environment:
 
 ```sh
-$ aws cloudformation describe-stacks --stack-name python-cloud9 --query "Stacks[0].Outputs[0].OutputValue"
+$ aws cloudformation describe-stacks --stack-name python-cloud9 --query "Stacks[0].Outputs[0].OutputValue" --output text --profile guru | pbcopy
 "https://us-east-1.console.aws.amazon.com/cloud9/ide/d96025f784e84b50a59daf55190e4bd1"
+```
+
+## Install developer tools
+
+[source](https://github.com/aws/aws-elastic-beanstalk-cli-setup)
+```
+sudo yum group install "Development Tools"
+sudo yum install \
+    zlib-devel openssl-devel ncurses-devel libffi-devel \
+    sqlite-devel.x86_64 readline-devel.x86_64 bzip2-devel.x86_64
+```
+
+### Update security group
+
+To access the API on the port 80, it is required to open the C9's security group:
+
+```sh
+security_group_id=$(aws ec2 describe-instances --query "Reservations[0].Instances[0].SecurityGroups[0].GroupId" --output text)
+aws ec2 describe-security-groups --group-ids $security_group_id
+aws ec2 authorize-security-group-ingress \
+    --group-id $security_group_id \
+    --protocol tcp \
+    --port 80 \
+    --cidr 0.0.0.0/0
 ```
 
 ## Docker image
